@@ -80,10 +80,10 @@ public class MovieFragement extends Fragment {
                 imageView = new ImageView(mContext);
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(85,85));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8,8,8,8);
             } else {
                 imageView = (ImageView) convertView;
             }
+
 
             Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
 
