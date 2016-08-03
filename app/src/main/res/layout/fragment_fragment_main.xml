@@ -8,10 +8,16 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="com.blues.popular_movie_stage1.MovieFragement">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/gridView"
+        android:columnWidth="100dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
 
 </FrameLayout>
