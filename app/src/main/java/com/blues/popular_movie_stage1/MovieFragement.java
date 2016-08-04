@@ -1,6 +1,7 @@
 package com.blues.popular_movie_stage1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,8 +32,7 @@ import java.util.List;
 
 
 public class MovieFragement extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private final String LOG_TAG = MovieFragement.class.getSimpleName();
 
     private MovieData mMovieData;
@@ -67,7 +67,21 @@ public class MovieFragement extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO: intent to detail activity
-                Log.v(LOG_TAG,"postion: " + position);
+
+                try {
+                    Intent detailIntent = new Intent(getActivity(),DetailActivity.class)
+                            .putExtra("title",mMovieData.getTitle(position))
+                            .putExtra("date",mMovieData.getDate(position))
+                            .putExtra("poster",mMovieData.getPosterUrl(position))
+                            .putExtra("overview",mMovieData.getIntroduce(position))
+                            .putExtra("vote",mMovieData.getVote(position)
+                            );
+
+                    startActivity(detailIntent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -224,9 +238,9 @@ public class MovieFragement extends Fragment {
 
         String getPosterUrl(int position) {
             try {
-                return IMAGE_BASE_URL + getResults().getJSONObject(position).getString("poster_path");
+                return IMAGE_BASE_URL + getResult(position).getString("poster_path");
             } catch (JSONException e) {
-                Log.e("ForecastFragment", "Error closing stream", e);
+                Log.v(LOG_TAG,"Error: ",e);
                 return null;
             }
         }
@@ -245,10 +259,37 @@ public class MovieFragement extends Fragment {
             try {
                 return movieJson.getJSONArray("results");
             } catch (JSONException e) {
-                Log.e("ForecastFragment", "Error closing stream", e);
+                Log.v(LOG_TAG,"Error: ",e);
                 return null;
             }
         }
+
+        JSONObject getResult(int position){
+            try {
+                return getResults().getJSONObject(position);
+            } catch (JSONException e) {
+                Log.v(LOG_TAG,"Error: ",e);
+                return null;
+            }
+        }
+
+        String getTitle(int position) throws JSONException{
+                return getResult(position).getString("title");
+        }
+
+        String getIntroduce(int position) throws JSONException{
+            return getResult(position).getString("overview");
+        }
+
+        String getDate(int position) throws JSONException{
+            return getResult(position).getString("release_date");
+        }
+
+        int getVote(int position) throws JSONException {
+            return getResult(position).getInt("vote_average");
+        }
+
+
 
 
     }
