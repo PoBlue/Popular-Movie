@@ -16,18 +16,25 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MovieFragement extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
+    private MovieData mMovieData;
 
     public MovieFragement() {
         // Required empty public constructor
@@ -51,6 +58,7 @@ public class MovieFragement extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_fragment_main,container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
         gridView.setAdapter(new ImageAdapter(getActivity()));
+
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -106,12 +114,12 @@ public class MovieFragement extends Fragment {
         }
     }
 
-    public class FetchMovieTask extends AsyncTask<String,Void,Void>{
+    public class FetchMovieTask extends AsyncTask<String,Void,String>{
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String doInBackground(String... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
@@ -176,8 +184,64 @@ public class MovieFragement extends Fragment {
                 }
             }
 
-            return null;
+            return moviesJsonStr;
         }
+
+        @Override
+        protected void onPostExecute(String moviesJsonStr) {
+            super.onPostExecute(moviesJsonStr);
+            if (moviesJsonStr != null){
+                mMovieData = new MovieData(moviesJsonStr);
+                List<String> imageUrls = mMovieData.getAllPosterUrls();
+                //TODO: apdapter update
+                Log.v(LOG_TAG,imageUrls.get(3));
+            }
+        }
+    }
+
+    public class MovieData {
+        String LOG_TAG = MovieData.class.getSimpleName();
+        private final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185";
+
+        private JSONObject movieJson;
+
+        public MovieData(String jsonStr){
+            try {
+                movieJson = new JSONObject(jsonStr);
+            } catch (JSONException e) {
+                Log.v(LOG_TAG,"Error: ",e);
+            }
+        }
+
+        String getPosterUrl(int position) {
+            try {
+                return IMAGE_BASE_URL + getResults().getJSONObject(position).getString("poster_path");
+            } catch (JSONException e) {
+                Log.e("ForecastFragment", "Error closing stream", e);
+                return null;
+            }
+        }
+
+        List<String> getAllPosterUrls(){
+            List<String> urls = new ArrayList<String>();
+
+            for (int i = 0 ; i < getResults().length();i++){
+               urls.add(getPosterUrl(i));
+            }
+
+            return urls;
+        }
+
+        JSONArray getResults() {
+            try {
+                return movieJson.getJSONArray("results");
+            } catch (JSONException e) {
+                Log.e("ForecastFragment", "Error closing stream", e);
+                return null;
+            }
+        }
+
+
     }
 
 }
