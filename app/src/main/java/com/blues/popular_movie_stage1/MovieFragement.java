@@ -33,8 +33,10 @@ import java.util.List;
 public class MovieFragement extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private final String LOG_TAG = MovieFragement.class.getSimpleName();
 
     private MovieData mMovieData;
+    private ImageAdapter mImageAdapter;
 
     public MovieFragement() {
         // Required empty public constructor
@@ -57,13 +59,15 @@ public class MovieFragement extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_fragment_main,container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
-        gridView.setAdapter(new ImageAdapter(getActivity()));
+        mImageAdapter = new ImageAdapter(getActivity());
+        gridView.setAdapter(mImageAdapter);
 
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: click Trigger
+                //TODO: intent to detail activity
+                Log.v(LOG_TAG,"postion: " + position);
             }
         });
 
@@ -71,9 +75,12 @@ public class MovieFragement extends Fragment {
     }
 
     public class ImageAdapter extends BaseAdapter{
-        private String[] imageUrls = {
-                // TODO: imageUrls
-        };
+        private List<String> imageUrls = new ArrayList<String>();
+
+        public void updateImageUrls(List<String> newImageUrls){
+            imageUrls = newImageUrls;
+            notifyDataSetChanged();
+        }
 
         private Context mContext;
 
@@ -83,8 +90,7 @@ public class MovieFragement extends Fragment {
 
         @Override
         public int getCount() {
-//            return imageUrls.length;
-            return 9;
+            return imageUrls.toArray().length;
         }
 
         @Override
@@ -107,8 +113,9 @@ public class MovieFragement extends Fragment {
                 imageView = (ImageView) convertView;
             }
 
-
-            Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+            Picasso.with(mContext)
+                    .load(imageUrls.get(position))
+                    .into(imageView);
 
             return imageView;
         }
@@ -194,7 +201,9 @@ public class MovieFragement extends Fragment {
                 mMovieData = new MovieData(moviesJsonStr);
                 List<String> imageUrls = mMovieData.getAllPosterUrls();
                 //TODO: apdapter update
+                mImageAdapter.updateImageUrls(imageUrls);
                 Log.v(LOG_TAG,imageUrls.get(3));
+
             }
         }
     }
