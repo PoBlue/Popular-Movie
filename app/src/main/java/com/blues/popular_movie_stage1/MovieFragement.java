@@ -1,8 +1,11 @@
 package com.blues.popular_movie_stage1;
 
 import android.content.Context;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,13 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 public class MovieFragement extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -21,6 +31,12 @@ public class MovieFragement extends Fragment {
 
     public MovieFragement() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new FetchMovieTask().execute();
     }
 
     @Override
@@ -78,7 +94,6 @@ public class MovieFragement extends Fragment {
             ImageView imageView;
             if (convertView == null){
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(85,85));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             } else {
                 imageView = (ImageView) convertView;
@@ -88,6 +103,80 @@ public class MovieFragement extends Fragment {
             Picasso.with(mContext).load("http://i.imgur.com/DvpvklR.png").into(imageView);
 
             return imageView;
+        }
+    }
+
+    public class FetchMovieTask extends AsyncTask<String,Void,Void>{
+
+        private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
+
+        @Override
+        protected Void doInBackground(String... params) {
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String moviesJsonStr = null;
+
+            String apiKey = "ab91ed9affc29a894989e8ea3200d963";
+
+            try {
+                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+                final String POPULAR_PATH = "popular";
+                final String MOVIE_PATH = "movie";
+                final String TOP_RATED_PATH = "top_rated";
+                final String API_PARAM = "api_key";
+
+                Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                        .appendPath(MOVIE_PATH)
+                        .appendPath(POPULAR_PATH)
+                        .appendQueryParameter(API_PARAM,apiKey)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                Log.v(LOG_TAG,"Built URI: " + builtUri.toString());
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                moviesJsonStr = buffer.toString();
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG,"Error",e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("ForecastFragment", "Error closing stream", e);
+                    }
+                }
+            }
+
+            return null;
         }
     }
 
