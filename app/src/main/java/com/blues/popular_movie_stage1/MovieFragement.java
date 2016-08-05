@@ -150,7 +150,7 @@ public class MovieFragement extends Fragment {
             String moviesJsonStr = null;
             String orderPath = params[0];
 
-            //TODO: fill this paramater with your API_KEY
+            //TODO: replace {API_KEY} with your API_KEY
             String apiKey = "{API_KEY}";
 
             try {
