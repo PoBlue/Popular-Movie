@@ -71,8 +71,6 @@ public class MovieFragement extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: intent to detail activity
-
                 try {
                     Intent detailIntent = new Intent(getActivity(),DetailActivity.class)
                             .putExtra("title",mMovieData.getTitle(position))
@@ -151,7 +149,9 @@ public class MovieFragement extends Fragment {
 
             String moviesJsonStr = null;
             String orderPath = params[0];
-            String apiKey = "ab91ed9affc29a894989e8ea3200d963";
+
+            //TODO: fill this paramater with your API_KEY
+            String apiKey = "{API_KEY}";
 
             try {
                 final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
