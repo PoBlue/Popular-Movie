@@ -2,9 +2,11 @@ package com.blues.popular_movie_stage1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +47,10 @@ public class MovieFragement extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        new FetchMovieTask().execute();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String order = pref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_popular));
+        Log.v(LOG_TAG,"order: " + order);
+        new FetchMovieTask().execute(order);
     }
 
     @Override
@@ -145,7 +150,7 @@ public class MovieFragement extends Fragment {
             BufferedReader reader = null;
 
             String moviesJsonStr = null;
-
+            String orderPath = params[0];
             String apiKey = "ab91ed9affc29a894989e8ea3200d963";
 
             try {
@@ -157,7 +162,7 @@ public class MovieFragement extends Fragment {
 
                 Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendPath(MOVIE_PATH)
-                        .appendPath(POPULAR_PATH)
+                        .appendPath(orderPath)
                         .appendQueryParameter(API_PARAM,apiKey)
                         .build();
 
@@ -214,7 +219,6 @@ public class MovieFragement extends Fragment {
             if (moviesJsonStr != null){
                 mMovieData = new MovieData(moviesJsonStr);
                 List<String> imageUrls = mMovieData.getAllPosterUrls();
-                //TODO: apdapter update
                 mImageAdapter.updateImageUrls(imageUrls);
                 Log.v(LOG_TAG,imageUrls.get(3));
 

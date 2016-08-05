@@ -1,9 +1,17 @@
 <resources>
     <string name="app_name">Popular_Movie_Stage1</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_units_label">Order</string>
+    <string name="pref_units_key">units</string>
+
+    <string name="pref_units_popular">popular</string>
+    <string name="pref_units_topRated">top_rated</string>
+    <string name="pref_units_label_popular">Popular</string>
+    <string name="pref_units_label_topRated">Top Rated</string>
+
 
     <!-- Strings related to Settings -->
 
