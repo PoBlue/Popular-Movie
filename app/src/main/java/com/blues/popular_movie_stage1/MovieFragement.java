@@ -1,23 +1,17 @@
 package com.blues.popular_movie_stage1;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +32,8 @@ public class MovieFragement extends Fragment {
     private final String LOG_TAG = MovieFragement.class.getSimpleName();
 
     private MovieData mMovieData;
-    private ImageAdapter mImageAdapter;
-
+    private MovieAdapter mImageAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     public MovieFragement() {
         // Required empty public constructor
     }
@@ -63,80 +57,39 @@ public class MovieFragement extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_fragment_main,container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
-        mImageAdapter = new ImageAdapter(getActivity());
-        gridView.setAdapter(mImageAdapter);
+//        GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+        mImageAdapter = new MovieAdapter();
+
+        mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(mImageAdapter);
 
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    Intent detailIntent = new Intent(getActivity(),DetailActivity.class)
-                            .putExtra("title",mMovieData.getTitle(position))
-                            .putExtra("date",mMovieData.getDate(position))
-                            .putExtra("poster",mMovieData.getPosterUrl(position))
-                            .putExtra("overview",mMovieData.getIntroduce(position))
-                            .putExtra("vote",mMovieData.getVote(position)
-                            );
-
-                    startActivity(detailIntent);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
+//        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                try {
+//                    Intent detailIntent = new Intent(getActivity(),DetailActivity.class)
+//                            .putExtra("title",mMovieData.getTitle(position))
+//                            .putExtra("date",mMovieData.getDate(position))
+//                            .putExtra("poster",mMovieData.getPosterUrl(position))
+//                            .putExtra("overview",mMovieData.getIntroduce(position))
+//                            .putExtra("vote",mMovieData.getVote(position)
+//                            );
+//
+//                    startActivity(detailIntent);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        });
 
         return rootView;
     }
 
-    public class ImageAdapter extends BaseAdapter{
-        private List<String> imageUrls = new ArrayList<String>();
-
-        public void updateImageUrls(List<String> newImageUrls){
-            imageUrls = newImageUrls;
-            notifyDataSetChanged();
-        }
-
-        private Context mContext;
-
-        public ImageAdapter(Context c){
-            mContext = c;
-        }
-
-        @Override
-        public int getCount() {
-            return imageUrls.toArray().length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
-            if (convertView == null){
-                imageView = new ImageView(mContext);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            } else {
-                imageView = (ImageView) convertView;
-            }
-
-            Picasso.with(mContext)
-                    .load(imageUrls.get(position))
-                    .into(imageView);
-
-            return imageView;
-        }
-    }
 
     public class FetchMovieTask extends AsyncTask<String,Void,String>{
 
@@ -151,12 +104,14 @@ public class MovieFragement extends Fragment {
             String orderPath = params[0];
 
             //TODO: replace {API_KEY} with your API_KEY
-            String apiKey = "{API_KEY}";
+            String apiKey = "ab91ed9affc29a894989e8ea3200d963";
 
             try {
                 final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
                 final String POPULAR_PATH = "popular";
                 final String MOVIE_PATH = "movie";
+                final String VIDEOS_PATH = "videos";
+                final String REVIEWS_PATH = "reviews";
                 final String TOP_RATED_PATH = "top_rated";
                 final String API_PARAM = "api_key";
 
