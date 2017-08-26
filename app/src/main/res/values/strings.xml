@@ -13,6 +13,11 @@
     <string name="pref_units_label_topRated">Top Rated</string>
 
 
+    <!-- url base-->
+    <string name="url_for_downloading_poster">http://image.tmdb.org/t/p/w342</string>
+    <string name="url_for_downloading_backdrop">http://image.tmdb.org/t/p/original</string>
+    <string name="release_date_missing">Release date is unknown</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

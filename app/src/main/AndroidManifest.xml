@@ -26,6 +26,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.blues.popular_movie_stage1.MainActivity" />
         </activity>
+
+        <provider
+            android:name=".data.MoviesProvider"
+            android:authorities="com.dmitrymalkovich.android.popularmoviesapp" />
     </application>
 
 </manifest>
