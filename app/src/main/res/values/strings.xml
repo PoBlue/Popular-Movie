@@ -75,4 +75,9 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="poster_desc">poster</string>
+    <string name="add_to_favorites">add to favorites</string>
+    <string name="remove_from_favorites">remove from favorites</string>
+
+    <string name="watch_trailer">Watch trailer</string>
 </resources>

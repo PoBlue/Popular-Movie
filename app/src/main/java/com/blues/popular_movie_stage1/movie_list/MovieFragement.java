@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MovieFragement extends Fragment implements MovieListActivityMVP.View, MovieAdapter.ClickMovieHandler{
+public class MovieFragement extends Fragment implements MovieListActivityMVP.View, MovieAdapter.ClickMovieHandler, SharedPreferences.OnSharedPreferenceChangeListener{
 
     private final String LOG_TAG = MovieFragement.class.getSimpleName();
     private MovieListActivityMVP.Presenter presenter = new MoviePresenter();
+    private String mOrder;
 
     private MovieAdapter movieAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -35,16 +36,17 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
     @Override
     public void onStart() {
         super.onStart();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String order = pref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_popular));
-
-        presenter.setView(this);
-        presenter.getMovies(order);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mOrder = pref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_popular));
+
+        presenter.setView(this);
+        presenter.getMovies(mOrder);
     }
 
     @Override
@@ -65,6 +67,12 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
     }
 
     @Override
+    public void onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void jumpToDetailActivity(Movie movie) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         intent.putExtra(DetailActivity.ARG_MOVIE, movie);
@@ -79,6 +87,7 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
 
     @Override
     public void updateData(List<Movie> movies) {
+        movieAdapter.clear();
         movieAdapter.updateMovies(movies);
     }
 
@@ -90,5 +99,11 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
     @Override
     public void clickMovie(Movie movie) {
         presenter.listItemClicked(movie);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        String order = sharedPreferences.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_popular));
+        presenter.getMovies(order);
     }
 }

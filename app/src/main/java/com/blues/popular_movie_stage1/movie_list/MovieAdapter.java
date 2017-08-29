@@ -15,6 +15,7 @@ import com.blues.popular_movie_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public MovieAdapter(Context context, List<Movie> movies){
         mContext = context;
         mMovies = movies;
+    }
+
+    public void clear(){
+        mMovies = new ArrayList<Movie>();
+        notifyDataSetChanged();
     }
 
 
