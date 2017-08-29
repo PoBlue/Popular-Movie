@@ -1,4 +1,4 @@
-package com.blues.popular_movie_stage1;
+package com.blues.popular_movie_stage1.movie_list;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.blues.popular_movie_stage1.R;
+import com.blues.popular_movie_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,26 +24,50 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> imageUrls = new ArrayList<String>();
+    private List<Movie> mMovies;
+    private ClickMovieHandler handler;
 
-    public void updateImageUrls(List<String> newImageUrls){
-        imageUrls = newImageUrls;
+    public void setHandler(ClickMovieHandler handler) {
+        this.handler = handler;
+    }
+
+    interface ClickMovieHandler {
+        void clickMovie(Movie movie);
+    }
+
+    public MovieAdapter(Context context, List<Movie> movies){
+        mContext = context;
+        mMovies = movies;
+    }
+
+
+    public void updateMovies(List<Movie> movies){
+        mMovies = movies;
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
         View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.movie_item, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(itemView);
-        return viewHolder;
+        return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Picasso.with(mContext).load(imageUrls.get(position)).into(new Target() {
+        final Movie movie = mMovies.get(position);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handler.clickMovie(movie);
+            }
+        });
+
+        holder.titleView.setText(movie.getTitle());
+
+        Picasso.with(mContext).load(movie.getPosterUrl(mContext)).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 int width = bitmap.getWidth();
@@ -63,13 +89,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return imageUrls.toArray().length;
+        return mMovies.toArray().length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public ImageView movieImageViewHD;
+        public TextView titleView;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -77,9 +104,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            ImageView movieImageView = (ImageView) itemView.findViewById(R.id.movie_imageview);
-            movieImageViewHD = movieImageView;
-
+            titleView = (TextView) itemView.findViewById(R.id.title);
+            movieImageViewHD = (ImageView) itemView.findViewById(R.id.movie_imageview);
         }
     }
 }

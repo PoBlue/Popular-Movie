@@ -9,24 +9,30 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blues.popular_movie_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
     private final String LOG_TAG = DetailActivity.class.getSimpleName();
+    public static final String ARG_MOVIE = "ARG_MOVIE";
+    private Movie mMovie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         Intent intent = getIntent();
+        mMovie = intent.getParcelableExtra(ARG_MOVIE);
+
 
         if (intent != null) {
-            String title = intent.getStringExtra("title");
-            String posterUrl = intent.getStringExtra("poster");
-            String overview = intent.getStringExtra("overview");
-            String vote = intent.getIntExtra("vote",0) + "";
-            String date = intent.getStringExtra("date");
+            String title = mMovie.getTitle();
+            String posterUrl = mMovie.getPosterUrl(this);
+            String overview = mMovie.getOverview();
+            String vote = mMovie.getUserRating();
+            String date = mMovie.getReleaseDate();
 
             ((TextView) findViewById(R.id.title_view)).setText(title);
             ((TextView) findViewById(R.id.introduce_view)).setText(overview);

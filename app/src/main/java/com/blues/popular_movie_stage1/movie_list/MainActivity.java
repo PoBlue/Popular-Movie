@@ -1,18 +1,15 @@
-package com.blues.popular_movie_stage1;
+package com.blues.popular_movie_stage1.movie_list;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.blues.popular_movie_stage1.api.FetchMoviesTask;
-import com.blues.popular_movie_stage1.model.Movie;
+import com.blues.popular_movie_stage1.R;
+import com.blues.popular_movie_stage1.SettingsActivity;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements FetchMoviesTask.Listener {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.L
                     .commit();
         }
 
-        new FetchMoviesTask(FetchMoviesTask.TOP_RATED, this).execute();
     }
 
     @Override
@@ -44,10 +40,5 @@ public class MainActivity extends AppCompatActivity implements FetchMoviesTask.L
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onMoviesFetchFinished(List<Movie> movies) {
-        Log.v("test", movies.get(0).getTitle());
     }
 }
