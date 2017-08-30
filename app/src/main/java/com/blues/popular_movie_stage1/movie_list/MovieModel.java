@@ -1,27 +1,29 @@
 package com.blues.popular_movie_stage1.movie_list;
 
-import com.blues.popular_movie_stage1.api.FetchMoviesTask;
-import com.blues.popular_movie_stage1.model.Movie;
+import com.blues.popular_movie_stage1.BuildConfig;
+import com.blues.popular_movie_stage1.api.MovieDatabaseService;
+import com.blues.popular_movie_stage1.model.Movies;
 import com.blues.popular_movie_stage1.model.Review;
 import com.blues.popular_movie_stage1.model.Trailer;
 
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * Created by wicher on 2017/8/29.
  */
 
-public class MovieModel implements MovieListActivityMVP.Model, FetchMoviesTask.Listener {
-    private MovieListActivityMVP.Presenter mPresenter;
+public class MovieModel implements MovieListActivityMVP.Model {
+    private MovieDatabaseService movieDatabaseService;
 
-    @Override
-    public void setPresenter(MovieListActivityMVP.Presenter presenter) {
-        mPresenter = presenter;
+    public MovieModel(MovieDatabaseService movieDatabaseService) {
+        this.movieDatabaseService = movieDatabaseService;
     }
 
     @Override
-    public void getMovies(String sortOf) {
-        new FetchMoviesTask(sortOf, this).execute();
+    public Observable<Movies> getMovies(String sortOf) {
+        return movieDatabaseService.discoverMovies(sortOf, BuildConfig.THE_MOVIE_DATABASE_API_KEY);
     }
 
     @Override
@@ -39,8 +41,4 @@ public class MovieModel implements MovieListActivityMVP.Model, FetchMoviesTask.L
         return false;
     }
 
-    @Override
-    public void onMoviesFetchFinished(List<Movie> movies) {
-        mPresenter.updateMovies(movies);
-    }
 }

@@ -16,15 +16,21 @@ import com.blues.popular_movie_stage1.DetailActivity;
 import com.blues.popular_movie_stage1.R;
 import com.blues.popular_movie_stage1.SettingsActivity;
 import com.blues.popular_movie_stage1.model.Movie;
+import com.blues.popular_movie_stage1.root.App;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class MovieFragement extends Fragment implements MovieListActivityMVP.View, MovieAdapter.ClickMovieHandler, SharedPreferences.OnSharedPreferenceChangeListener{
 
     private final String LOG_TAG = MovieFragement.class.getSimpleName();
-    private MovieListActivityMVP.Presenter presenter = new MoviePresenter();
+
+    @Inject
+    MovieListActivityMVP.Presenter presenter;
+
     private String mOrder;
 
     private MovieAdapter movieAdapter;
@@ -41,6 +47,8 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((App) getActivity().getApplication()).getComponent().inject(this);
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mOrder = pref.getString(getString(R.string.pref_units_key),getString(R.string.pref_units_popular));
@@ -54,6 +62,7 @@ public class MovieFragement extends Fragment implements MovieListActivityMVP.Vie
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_fragment_main,container, false);
+
 
         //init recycler view
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);

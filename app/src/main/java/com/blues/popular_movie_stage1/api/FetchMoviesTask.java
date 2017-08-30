@@ -2,20 +2,11 @@ package com.blues.popular_movie_stage1.api;
 
 import android.os.AsyncTask;
 import android.support.annotation.StringDef;
-import android.util.Log;
 
-import com.blues.popular_movie_stage1.BuildConfig;
 import com.blues.popular_movie_stage1.model.Movie;
-import com.blues.popular_movie_stage1.model.Movies;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 ;
 
@@ -72,22 +63,22 @@ public class FetchMoviesTask extends AsyncTask<Void, Void, List<Movie>>{
     @Override
     protected List<Movie> doInBackground(Void... params) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.themoviedb.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        MovieDatabaseService service = retrofit.create(MovieDatabaseService.class);
-        Call<Movies> call = service.discoverMovies(mSortBy,
-                BuildConfig.THE_MOVIE_DATABASE_API_KEY);
-        try {
-            Response<Movies> response = call.execute();
-            Movies movies = response.body();
-            return movies.getMovies();
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "A problem occurred talking to the movie db ", e);
-        }
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://api.themoviedb.org/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        MovieDatabaseService service = retrofit.create(MovieDatabaseService.class);
+//        Call<Movies> call = service.discoverMovies(mSortBy,
+//                BuildConfig.THE_MOVIE_DATABASE_API_KEY);
+//        try {
+//            Response<Movies> response = call.execute();
+//            Movies movies = response.body();
+//            return movies.getMovies();
+//
+//        } catch (IOException e) {
+//            Log.e(LOG_TAG, "A problem occurred talking to the movie db ", e);
+//        }
         return null;
     }
 }

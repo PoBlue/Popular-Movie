@@ -27,6 +27,22 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    supportLibraryVersion = "25.0.1"
+    retrofitVersion = "2.1.0"
+    okHttpVersion = "3.4.2"
+    rxJavaVersion = "1.2.2"
+    rxAndroidVersion = "1.2.1"
+    rxLifecycleVersion = "1.0"
+    rxBindingsVersion = "0.4.0"
+    butterknifeVersion = "8.4.0"
+    daggerVersion = "2.7"
+    glideVersion = "3.7.0"
+    jUnitVersion = "4.12"
+    mockitoVersion = "1.10.19"
+    testingSupportLibraryVersion = "0.5"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -39,5 +55,16 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.google.dagger:dagger:2.9'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}"
+
+    compile "io.reactivex:rxjava:${rxJavaVersion}"
+    compile "io.reactivex:rxandroid:${rxAndroidVersion}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
+    compile "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxBindingsVersion}"
 }
