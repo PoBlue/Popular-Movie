@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.blues.popular_movie_stage1.DetailActivity;
+import com.blues.popular_movie_stage1.detail_screen.DetailActivity;
 import com.blues.popular_movie_stage1.R;
 import com.blues.popular_movie_stage1.SettingsActivity;
 import com.blues.popular_movie_stage1.model.Movie;

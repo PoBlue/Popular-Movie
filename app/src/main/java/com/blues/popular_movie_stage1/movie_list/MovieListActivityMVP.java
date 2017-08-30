@@ -2,8 +2,8 @@ package com.blues.popular_movie_stage1.movie_list;
 
 import com.blues.popular_movie_stage1.model.Movie;
 import com.blues.popular_movie_stage1.model.Movies;
-import com.blues.popular_movie_stage1.model.Review;
-import com.blues.popular_movie_stage1.model.Trailer;
+import com.blues.popular_movie_stage1.model.Reviews;
+import com.blues.popular_movie_stage1.model.Trailers;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ public interface MovieListActivityMVP {
 
     interface Model {
         Observable<Movies> getMovies(String sortOf);
-        List<Review> getReviews();
-        List<Trailer> getTrailers();
-        boolean markAsFavour(boolean isFavour);
+        Observable<Reviews> getReviews(long movieId);
+        Observable<Trailers> getTrailers(long movieId);
+        boolean markAsFavour(long movieId);
     }
 }

@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity"
+        <activity android:name=".detail_screen.DetailActivity"
             android:label="Detail movie"
             android:theme="@style/AppTheme.NoActionBar"
             />

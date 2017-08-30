@@ -3,6 +3,7 @@ package com.blues.popular_movie_stage1.root;
 import android.app.Application;
 
 import com.blues.popular_movie_stage1.api.MovieApiModule;
+import com.blues.popular_movie_stage1.detail_screen.DetailModule;
 import com.blues.popular_movie_stage1.movie_list.MovieModule;
 
 /**
@@ -20,6 +21,7 @@ public class App extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .movieApiModule(new MovieApiModule())
                 .movieModule(new MovieModule())
+                .detailModule(new DetailModule())
                 .build();
     }
 

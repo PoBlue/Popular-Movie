@@ -1,4 +1,4 @@
-package com.blues.popular_movie_stage1;
+package com.blues.popular_movie_stage1.detail_screen;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blues.popular_movie_stage1.R;
 import com.blues.popular_movie_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,6 +24,9 @@ public class DetailActivity extends AppCompatActivity {
     private final String LOG_TAG = DetailActivity.class.getSimpleName();
     public static final String ARG_MOVIE = "ARG_MOVIE";
     private Movie mMovie;
+
+    @Inject
+    DetailActivityMVP.Presenter presenter;
 
     @Bind(R.id.detail_toolbar)
     Toolbar mToolbar;
@@ -32,7 +38,6 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-
         Intent intent = getIntent();
         mMovie = intent.getParcelableExtra(ARG_MOVIE);
 
