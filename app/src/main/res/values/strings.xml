@@ -80,4 +80,7 @@
     <string name="remove_from_favorites">remove from favorites</string>
 
     <string name="watch_trailer">Watch trailer</string>
+    <string name="movie_detail_videos_title">Videos</string>
+    <string name="movie_reviews_title">Reviews</string>
+    <string name="content_description_movie_video">trailer_poster</string>
 </resources>
