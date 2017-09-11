@@ -1,6 +1,7 @@
 package com.blues.popular_movie_stage1.detail_screen;
 
 import com.blues.popular_movie_stage1.model.Movie;
+import com.blues.popular_movie_stage1.model.Review;
 import com.blues.popular_movie_stage1.model.Reviews;
 import com.blues.popular_movie_stage1.model.Trailer;
 import com.blues.popular_movie_stage1.model.Trailers;
@@ -43,6 +44,15 @@ public class DetailPresenter implements DetailActivityMVP.Presenter {
             mView.openTrailer(trailer);
         } else {
             mView.showErrorMessage("trailer error yet");
+        }
+    }
+
+    @Override
+    public void reviewClicked(Review review) {
+        if (review != null) {
+            mView.openReview(review);
+        } else {
+            mView.showErrorMessage("review open error");
         }
     }
 

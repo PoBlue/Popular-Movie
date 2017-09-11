@@ -1,17 +1,16 @@
 package com.blues.popular_movie_stage1.detail_screen;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blues.popular_movie_stage1.R;
 import com.blues.popular_movie_stage1.model.Movie;
@@ -20,24 +19,31 @@ import com.blues.popular_movie_stage1.model.Trailer;
 import com.blues.popular_movie_stage1.root.App;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class DetailActivity extends AppCompatActivity implements DetailActivityMVP.View {
+public class DetailActivity extends AppCompatActivity implements DetailActivityMVP.View, ReviewListAdapter.Callbacks, TrailerListAdapter.Callbacks {
 
     private final String LOG_TAG = DetailActivity.class.getSimpleName();
     public static final String ARG_MOVIE = "ARG_MOVIE";
     private Movie mMovie;
+    private ReviewListAdapter mReviewListAdapter;
+    private TrailerListAdapter mTrailerListAdapter;
 
     @Inject
     DetailActivityMVP.Presenter presenter;
 
     @Bind(R.id.detail_toolbar)
     Toolbar mToolbar;
+
+    @Bind(R.id.button_watch_trailer)
+    Button watch_trailer_btn;
 
     @Bind(R.id.movie_reviews)
     RecyclerView movieReviewsRecycler;
@@ -52,18 +58,24 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityM
         ButterKnife.bind(this);
         ((App) getApplication()).getComponent().inject(this);
 
+        //init view
+        mReviewListAdapter = new ReviewListAdapter(new ArrayList<Review>(), this);
+        movieReviewsRecycler.setAdapter(mReviewListAdapter);
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        movieTrailersRecycler.setLayoutManager(layoutManager);
+        mTrailerListAdapter = new TrailerListAdapter(new ArrayList<Trailer>(), this);
+        movieTrailersRecycler.setAdapter(mTrailerListAdapter);
+        movieTrailersRecycler.setNestedScrollingEnabled(false);
+
+        //get data and init presenter
         Intent intent = getIntent();
         mMovie = intent.getParcelableExtra(ARG_MOVIE);
         presenter.setView(this);
         presenter.getMovieInfo(mMovie);
 
         setSupportActionBar(mToolbar);
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-
-        return super.onCreateView(name, context, attrs);
     }
 
     @Override
@@ -90,14 +102,19 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityM
         }
     }
 
+    @OnClick(R.id.button_watch_trailer)
+    public void trailerBtnClicked() {
+        presenter.trailerBtnClicked();
+    }
+
     @Override
     public void showReviewInfo(List<Review> reviews) {
-
+        mReviewListAdapter.add(reviews);
     }
 
     @Override
     public void showTrailerInfo(List<Trailer> trailers) {
-
+        mTrailerListAdapter.add(trailers);
     }
 
     @Override
@@ -110,7 +127,23 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityM
     }
 
     @Override
+    public void openReview(Review review) {
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(review.getUrl())));
+    }
+
+    @Override
     public void showErrorMessage(String msg) {
-        Log.v("test", msg);
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReviewclicked(Review review, int position) {
+        presenter.reviewClicked(review);
+    }
+
+    @Override
+    public void watch(Trailer trailer, int position) {
+        presenter.trailerClicked(trailer);
     }
 }

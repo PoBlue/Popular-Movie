@@ -21,6 +21,7 @@ public interface DetailActivityMVP {
         void showReviewInfo(List<Review> reviews);
         void showTrailerInfo(List<Trailer> trailers);
         void openTrailer(Trailer trailer);
+        void openReview(Review review);
         void showErrorMessage(String msg);
     }
 
@@ -28,6 +29,7 @@ public interface DetailActivityMVP {
         boolean favourBtnClicked(long movieId);
         void trailerBtnClicked();
         void trailerClicked(Trailer trailer);
+        void reviewClicked(Review review);
         void getMovieInfo(Movie movie);
         void setView(DetailActivityMVP.View view);
     }

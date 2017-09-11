@@ -9,6 +9,7 @@ import com.blues.popular_movie_stage1.model.Trailer;
 import com.blues.popular_movie_stage1.model.Trailers;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Created by wicher on 2017/8/29.
@@ -16,6 +17,7 @@ import rx.Observable;
 
 public class MovieModel implements MovieListActivityMVP.Model, DetailActivityMVP.Model {
     private MovieDatabaseService movieDatabaseService;
+    private Trailer trailer;
 
     public MovieModel(MovieDatabaseService movieDatabaseService) {
         this.movieDatabaseService = movieDatabaseService;
@@ -33,12 +35,18 @@ public class MovieModel implements MovieListActivityMVP.Model, DetailActivityMVP
 
     @Override
     public Observable<Trailers> getTrailers(long movieId) {
-        return movieDatabaseService.findTrailersById(movieId, BuildConfig.THE_MOVIE_DATABASE_API_KEY);
+        return movieDatabaseService.findTrailersById(movieId, BuildConfig.THE_MOVIE_DATABASE_API_KEY)
+                .doOnNext(new Action1<Trailers>() {
+                    @Override
+                    public void call(Trailers trailers) {
+                        trailer = trailers.getTrailers().get(1);
+                    }
+                });
     }
 
     @Override
     public Trailer getTrailer() {
-        return null;
+        return trailer;
     }
 
     @Override
